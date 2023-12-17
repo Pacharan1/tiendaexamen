@@ -10,13 +10,25 @@
 
 <body>
     <?php
+    /*Aqui introducimos los GET que nos llegan de los header que vienen de los condicionales de conexion.php*/
     include("conexion.php");
+    if (isset($_GET['creado']) && $_GET['creado'] === 'true') {
+        echo "<p class='check'>Registro realizado correctamente</p>";
+    }
+    if (isset($_GET['error']) && $_GET['error'] === 'true') {
+        echo "<p class='error'>Hubo un error</p>";
+    }
+    if (isset($_GET['borrado']) && $_GET['borrado'] === 'true') {
+        echo "<p class='check'>Registro borrado correctamente</p>";
+    }
+
     ?>
     <div class="contenedor-tabla">
-        <div class="utilidades">
-            <button class="btn-crear">Crear</button>
-            <button class="btn-login">Login</button>
-        </div>
+        <form class="utilidades" action="" method="post">
+            <button class="btn-crear" name="ir_crear">Crear</button>
+            <button class="btn-login" name="ir_login">Login</button>
+        </form>
+
         <table>
             <tr class="encabezado">
                 <td>ID</td>
@@ -25,7 +37,7 @@
                 <td></td>
             </tr>
             <?php
-            /*para mostrar los productos he creado una sentencia preparada en el archivo conexion.php el cualhace un fetchAll 
+            /*para mostrar los productos he creado una sentencia preparada en el archivo conexion.php el cual hace un fetchAll 
             de todos los registros de la base de datos de los productos y en el index llamamos a la funcion y con un foreach vamos 
             imprimiendo producto por producto */
             $productos = mostrarProductos($conexdb);
@@ -36,8 +48,11 @@
                     <td>' . $producto["nombre_prod"] . '</td>
                     <td>' . $producto["precio_prod"] . ' €</td>
                     <td>
-                        <button class="btn-modificar">Modificar</button>
-                        <button class="btn-borrar">Borrar</button>
+                        <form action="" method="post">
+                            <button class="btn-modificar" name="modificar">Modificar</button>
+                            <button class="btn-borrar" name="borrar">Borrar</button>
+                            <input type="hidden" name="idprod" value="' . $producto["idproductos"] . '"> 
+                        </form>
                     </td>
                 </tr>';
             }

@@ -60,3 +60,11 @@ td {
   align-items: center;
   gap: 2rem;
 }
+
+.check {
+  color: green;
+}
+
+.error {
+  color: rgb(128, 0, 0);
+}
