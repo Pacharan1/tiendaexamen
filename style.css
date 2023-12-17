@@ -1,0 +1,38 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+}
+
+table {
+  width: 80%;
+  margin: 20px auto;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: left;
+}
+
+.encabezado {
+  background-color: #4caf50;
+  color: white;
+}
+
+.btn-modificar,
+.btn-borrar {
+  display: inline-block;
+  padding: 8px 12px;
+  text-decoration: none;
+  background-color: #008cba;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-borrar {
+  background-color: #f44336;
+}
