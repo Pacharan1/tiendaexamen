@@ -9,36 +9,42 @@
 </head>
 
 <body>
-    <table>
-        <tr class="encabezado">
-            <td>ID</td>
-            <td>Nombre del Producto</td>
-            <td>Precio</td>
-            <td></td>
-        </tr>
+    <?php
+    include("conexion.php");
+    ?>
+    <div class="contenedor-tabla">
+        <div class="utilidades">
+            <button class="btn-crear">Crear</button>
+            <button class="btn-login">Login</button>
+        </div>
+        <table>
+            <tr class="encabezado">
+                <td>ID</td>
+                <td>Nombre del Producto</td>
+                <td>Precio</td>
+                <td></td>
+            </tr>
+            <?php
+            /*para mostrar los productos he creado una sentencia preparada en el archivo conexion.php el cualhace un fetchAll 
+            de todos los registros de la base de datos de los productos y en el index llamamos a la funcion y con un foreach vamos 
+            imprimiendo producto por producto */
+            $productos = mostrarProductos($conexdb);
+            foreach ($productos as $producto) {
+                echo
+                '<tr>
+                    <td>' . $producto["idproductos"] . '</td>
+                    <td>' . $producto["nombre_prod"] . '</td>
+                    <td>' . $producto["precio_prod"] . ' €</td>
+                    <td>
+                        <button class="btn-modificar">Modificar</button>
+                        <button class="btn-borrar">Borrar</button>
+                    </td>
+                </tr>';
+            }
+            ?>
 
-        <tr>
-            <td>1</td>
-            <td>Producto A</td>
-            <td>$20.00</td>
-            <td>
-                <button class="btn-modificar">Modificar</button>
-                <button class="btn-borrar">Borrar</button>
-            </td>
-        </tr>
-        <tr>
-            <td>2</td>
-            <td>Producto B</td>
-            <td>$200.00</td>
-            <td>
-                <button class="btn-modificar">Modificar</button>
-                <button class="btn-borrar">Borrar</button>
-            </td>
-        </tr>
-
-
-    </table>
-
+        </table>
+    </div>
 </body>
 
 </html>

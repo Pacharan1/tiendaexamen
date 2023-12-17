@@ -3,6 +3,10 @@ body {
   background-color: #f4f4f4;
 }
 
+div {
+  padding-top: 20px;
+}
+
 table {
   width: 80%;
   margin: 20px auto;
@@ -22,7 +26,9 @@ td {
 }
 
 .btn-modificar,
-.btn-borrar {
+.btn-borrar,
+.btn-crear,
+.btn-login {
   display: inline-block;
   padding: 8px 12px;
   text-decoration: none;
@@ -35,4 +41,22 @@ td {
 
 .btn-borrar {
   background-color: #f44336;
+}
+
+.btn-crear {
+  background-color: #f4a536;
+  margin-left: 112px;
+}
+
+.btn-login {
+  background-color: #f4a536;
+  margin-right: 112px;
+}
+
+.utilidades {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
 }
