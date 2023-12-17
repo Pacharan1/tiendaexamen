@@ -26,7 +26,16 @@
                 <button class="btn-borrar">Borrar</button>
             </td>
         </tr>
-        <!-- Agrega más filas según sea necesario -->
+        <tr>
+            <td>2</td>
+            <td>Producto B</td>
+            <td>$200.00</td>
+            <td>
+                <button class="btn-modificar">Modificar</button>
+                <button class="btn-borrar">Borrar</button>
+            </td>
+        </tr>
+
 
     </table>
 
