@@ -54,6 +54,7 @@
                         <form action="" method="post">
                             <a class="btn-modificar" href=modificar.php?id=' . $producto["idproductos"] . '>Modificar</a>
                             <button class="btn-borrar" name="borrar">Borrar</button>
+                            ' . (isset($_SESSION['usuario']) ? '<button class="btn-anadir" name="anadir">Añadir al carrito</button>' : '') . '
                             <input type="hidden" name="idprod" value="' . $producto["idproductos"] . '"> 
                         </form>
                     </td>

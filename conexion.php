@@ -16,6 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ir_crear'])) {
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ir_login'])) {
     header("location: login.php");
 }
+
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ir_modificar'])) {
     header("location: modificar.php");
 }
@@ -86,7 +87,7 @@ function borrar($conexdb, $idprod)
 //el siguiente condicional y funcion es para modificar productos de la base de datos
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['modificar'])) {
-    $idprod = intval($GET['id']);
+    $idprod = intval($_GET['id']);
     $nombre = $_POST["nombre"];
     $precio = intval($_POST["precio"]);
     modificar($conexdb, $nombre, $precio, $idprod);
@@ -94,7 +95,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['modificar'])) {
 function modificar($conexdb, $nombre, $precio, $idprod)
 {
     try {
-        $query = "UPDATE 'productos' SET 'nombre_prod' = ':nombre', 'precio_prod' = :precio WHERE 'idproductos' = :idprod;";
+        $query = "UPDATE productos SET nombre_prod = :nombre, precio_prod = :precio WHERE idproductos = :idprod;";
         $stm = $conexdb->prepare($query);
         $stm->bindParam(":nombre", $nombre, PDO::PARAM_STR, 255);
         $stm->bindParam(":precio", $precio, PDO::PARAM_INT);

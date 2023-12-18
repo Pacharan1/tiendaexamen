@@ -13,7 +13,6 @@
     include("conexion.php");
     if (isset($_GET['id'])) {
         $idprod = $_GET['id'];
-        echo $idprod;
     }
 
     ?>
