@@ -16,6 +16,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ir_crear'])) {
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ir_login'])) {
     header("location: login.php");
 }
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ir_modificar'])) {
+    header("location: modificar.php");
+}
 
 
 
@@ -36,7 +39,7 @@ function mostrarProductos($conexdb)
 //el siguiente condicional y funcion es para crear un producto. Dentro del condicional se evalua el precio que sea un numero y que no está vacio
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['crear'])) {
     $nombre = $_POST["nombre"];
-    $precio = $_POST["precio"];
+    $precio = intval($_POST["precio"]);
     if (empty($nombre) || empty($precio)) {
         header("Location: crear.php?vacio=true");
         exit;
@@ -76,6 +79,28 @@ function borrar($conexdb, $idprod)
         $stm->bindParam(":idprod", $idprod, PDO::PARAM_INT);
         $stm->execute();
         header("Location: index.php?borrado=true");
+    } catch (PDOException $e) {
+        header("Location: index.php?error=true");
+    }
+}
+//el siguiente condicional y funcion es para modificar productos de la base de datos
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['modificar'])) {
+    $idprod = intval($GET['id']);
+    $nombre = $_POST["nombre"];
+    $precio = intval($_POST["precio"]);
+    modificar($conexdb, $nombre, $precio, $idprod);
+}
+function modificar($conexdb, $nombre, $precio, $idprod)
+{
+    try {
+        $query = "UPDATE 'productos' SET 'nombre_prod' = ':nombre', 'precio_prod' = :precio WHERE 'idproductos' = :idprod;";
+        $stm = $conexdb->prepare($query);
+        $stm->bindParam(":nombre", $nombre, PDO::PARAM_STR, 255);
+        $stm->bindParam(":precio", $precio, PDO::PARAM_INT);
+        $stm->bindParam(":idprod", $idprod, PDO::PARAM_INT);
+        $stm->execute();
+        header("Location: index.php?modificado=true");
     } catch (PDOException $e) {
         header("Location: index.php?error=true");
     }

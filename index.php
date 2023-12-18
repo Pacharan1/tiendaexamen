@@ -21,6 +21,9 @@
     if (isset($_GET['borrado']) && $_GET['borrado'] === 'true') {
         echo "<p class='check'>Registro borrado correctamente</p>";
     }
+    if (isset($_GET['modificado']) && $_GET['modificado'] === 'true') {
+        echo "<p class='check'>Registro modificado correctamente</p>";
+    }
 
     ?>
     <div class="contenedor-tabla">
@@ -49,7 +52,7 @@
                     <td>' . $producto["precio_prod"] . ' €</td>
                     <td>
                         <form action="" method="post">
-                            <button class="btn-modificar" name="modificar">Modificar</button>
+                            <a class="btn-modificar" href=modificar.php?id=' . $producto["idproductos"] . '>Modificar</a>
                             <button class="btn-borrar" name="borrar">Borrar</button>
                             <input type="hidden" name="idprod" value="' . $producto["idproductos"] . '"> 
                         </form>
