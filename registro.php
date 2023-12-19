@@ -9,7 +9,7 @@
 
 <body>
     <?php
-    include("funciones.php");
+    include("conexion.php");
     /* aqui realizamos el formulario de registro que tomará los datos para gestionarlo
     desde la pagina funciones.php y creará al usuario en la base de datos */
     ?>

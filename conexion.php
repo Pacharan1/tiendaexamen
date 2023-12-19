@@ -106,3 +106,35 @@ function modificar($conexdb, $nombre, $precio, $idprod)
         header("Location: index.php?error=true");
     }
 }
+
+// aqui recibimos los datos de registro y ejecutamos la funcion definida a continuacion
+if (isset($_POST["registro"])) {
+    $usuario = $_POST["emailregistro"];
+    $contrasena1 = $_POST["passregistro"];
+    $contrasena2 = $_POST["passregistrodos"];
+    registro($conexdb, $usuario, $contrasena1, $contrasena2);
+}
+
+/* la funcion registro recibe los datos y ejecuta el INSERT.
+Por seguridad, utiliza la funcion password_hash para encriptar la contraseña que se almacena
+despues volvemos a la pagina index con un GET para que ejecute el mensaje en verde de que esta correcto */
+function registro($conexion, $usuario, $contrasena1, $contraseña2)
+{
+    try {
+        if ($contrasena1 == $contraseña2) {
+
+            $stm = $conexion->prepare("INSERT INTO usuarios(correo_electronico, contrasena) VALUES (:usuario, :contrasena)");
+            $stm->bindParam(":usuario", $usuario, PDO::PARAM_STR, 255);
+            $stm->bindParam(":contrasena", hashContrasenia($contrasena1), PDO::PARAM_STR, 255);
+            $stm->execute();
+            header("location: index.php?errorform=true");
+        }
+    } catch (PDOException $e) {
+        echo $e->getmessage();
+    }
+}
+//funcion para encriptar la contraseña
+function hashContrasenia($contrasenia)
+{
+    return password_hash($contrasenia, PASSWORD_BCRYPT);
+};
