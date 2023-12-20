@@ -1,4 +1,5 @@
 <?php
+
 //CONEXION
 try {
     $conexion = "mysql:host=localhost;dbname=tiendaexamen";
@@ -21,6 +22,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ir_modificar'])) {
     header("location: modificar.php");
 }
 
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ir_registro'])) {
+    header("location: registro.php");
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['logout'])) {
+
+    if (ini_get("session.use_cookies")) {
+        $params = session_get_cookie_params();
+        setcookie(
+            session_name(),
+            '',
+            time() - 42000,
+            $params["path"],
+            $params["domain"],
+            $params["secure"],
+            $params["httponly"]
+        );
+    }
+    //DESTRUIMOS SESION Y VOLVEMOS A LA PAGINA PRINCIPAL
+    session_destroy();
+
+    header("Location: index.php");
+}
 
 
 //FUNCIONES
@@ -84,7 +108,7 @@ function borrar($conexdb, $idprod)
         header("Location: index.php?error=true");
     }
 }
-//el siguiente condicional y funcion es para modificar productos de la base de datos
+//el siguiente condicional y funcion es para MODIFICAR productos de la base de datos
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['modificar'])) {
     $idprod = intval($_GET['id']);
@@ -123,11 +147,11 @@ function registro($conexion, $usuario, $contrasena1, $contraseña2)
     try {
         if ($contrasena1 == $contraseña2) {
 
-            $stm = $conexion->prepare("INSERT INTO usuarios(correo_electronico, contrasena) VALUES (:usuario, :contrasena)");
+            $stm = $conexion->prepare("INSERT INTO usuarios(user, contrasena) VALUES (:usuario, :contrasena)");
             $stm->bindParam(":usuario", $usuario, PDO::PARAM_STR, 255);
             $stm->bindParam(":contrasena", hashContrasenia($contrasena1), PDO::PARAM_STR, 255);
             $stm->execute();
-            header("location: index.php?errorform=true");
+            header("Location: index.php?registro=true");
         }
     } catch (PDOException $e) {
         echo $e->getmessage();
@@ -137,4 +161,31 @@ function registro($conexion, $usuario, $contrasena1, $contraseña2)
 function hashContrasenia($contrasenia)
 {
     return password_hash($contrasenia, PASSWORD_BCRYPT);
+};
+
+/*esta condicional y la siguiente funcion es para iniciar sesion que basicamente lo que hace es un SELECT que reciba el usuario 
+de la base de datos y compare las contraseñas para darle el acceso*/
+if (isset($_POST["iniciar"])) {
+    $usuario = $_POST["email"];
+    $contrasena = $_POST["password"];
+    iniciarSesion($conexdb, $usuario, $contrasena);
+};
+
+function iniciarSesion($conexion, $usuario, $contrasena)
+{
+    try {
+        $stm = $conexion->prepare("SELECT * FROM usuarios WHERE user = :usuario;");
+        $stm->bindParam(":usuario", $usuario, PDO::PARAM_STR, 255);
+        $stm->execute();
+        $resultado = $stm->fetch(PDO::FETCH_ASSOC);
+        if ($resultado) {
+            if (password_verify($contrasena, $resultado['contrasena'])) {
+                session_start();
+                $_SESSION['usuario'] = $resultado['user'];
+                header("Location: index.php");
+            }
+        }
+    } catch (PDOException $e) {
+        echo $e->getmessage();
+    }
 };

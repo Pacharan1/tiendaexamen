@@ -10,9 +10,7 @@
 <body>
     <?php
     include("conexion.php");
-    if (isset($_GET['errorform']) && $_GET['errorform'] === 'true') {
-        echo "<p class='check'>Registro realizado correctamente</p>";
-    }
+
     ?>
     <!-- RECUERDA METER EL ACTION CON LA PAGINA A DONDE QUIERES IR CON EL USUARIO -->
     <form action="" method="post">

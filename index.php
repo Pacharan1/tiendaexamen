@@ -24,12 +24,30 @@
     if (isset($_GET['modificado']) && $_GET['modificado'] === 'true') {
         echo "<p class='check'>Registro modificado correctamente</p>";
     }
+    if (isset($_GET['registro']) && $_GET['registro'] === 'true') {
+        echo "<p class='check'>Registro realizado correctamente</p>";
+    }
 
     ?>
     <div class="contenedor-tabla">
         <form class="utilidades" action="" method="post">
             <button class="btn-crear" name="ir_crear">Crear</button>
-            <button class="btn-login" name="ir_login">Login</button>
+            <div class="acceso">
+                <?php
+                session_start();
+                if (isset($_SESSION['usuario'])) {
+                    echo '
+                        <h4>Hola, ' . ($_SESSION['usuario']) . '</h4>
+                        <button class="btn-registro" name="ir_carrito">Carrito</button>
+                        <button class="btn-login" name="logout">Logout</button>';
+                } else {
+                    echo '
+                        <button class="btn-registro" name="ir_registro">Registro</button>
+                        <button class="btn-login" name="ir_login">Login</button>
+                        ';
+                }
+                ?>
+            </div>
         </form>
 
         <table>

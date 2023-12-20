@@ -28,7 +28,8 @@ td {
 .btn-modificar,
 .btn-borrar,
 .btn-crear,
-.btn-login {
+.btn-login,
+.btn-registro {
   display: inline-block;
   padding: 8px 12px;
   text-decoration: none;
@@ -53,12 +54,25 @@ td {
   margin-right: 112px;
 }
 
+.btn-registro {
+  background-color: #f4a536;
+  margin-right: 5px;
+}
+
 .utilidades {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
   gap: 2rem;
+}
+
+.acceso {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
 }
 
 .check {
