@@ -25,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ir_modificar'])) {
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ir_registro'])) {
     header("location: registro.php");
 }
-
+// este evento es exclusivo para destruir la sesion y volver a la pagina principal
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['logout'])) {
 
     if (ini_get("session.use_cookies")) {
@@ -43,6 +43,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['logout'])) {
     //DESTRUIMOS SESION Y VOLVEMOS A LA PAGINA PRINCIPAL
     session_destroy();
 
+    header("Location: index.php");
+}
+
+//con el siguiente condicional, vamos a controlar las cookies que definen el modo oscuro y modo claro
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['modoOscuro'])) {
+    setcookie("modoOscuro", "true", time() + 60 * 60 * 24 * 30);
+    header("Location: index.php");
+} elseif ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['modoClaro'])) {
+    setcookie("modoOscuro", "false", time() + 60 * 60 * 24 * 30);
     header("Location: index.php");
 }
 
@@ -108,7 +117,7 @@ function borrar($conexdb, $idprod)
         header("Location: index.php?error=true");
     }
 }
-//el siguiente condicional y funcion es para MODIFICAR productos de la base de datos
+//el siguiente condicional y funcion es para MODIFICAR productos de la base de datos UTILIZANDO UN GET
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['modificar'])) {
     $idprod = intval($_GET['id']);
