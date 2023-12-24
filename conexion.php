@@ -25,6 +25,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ir_modificar'])) {
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ir_registro'])) {
     header("location: registro.php");
 }
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ir_carrito'])) {
+    header("location: carrito.php");
+}
 // este evento es exclusivo para destruir la sesion y volver a la pagina principal
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['logout'])) {
 
@@ -191,6 +195,7 @@ function iniciarSesion($conexion, $usuario, $contrasena)
             if (password_verify($contrasena, $resultado['contrasena'])) {
                 session_start();
                 $_SESSION['usuario'] = $resultado['user'];
+                $_SESSION['id'] = $resultado['idusuarios'];
                 header("Location: index.php");
             }
         }
@@ -198,3 +203,58 @@ function iniciarSesion($conexion, $usuario, $contrasena)
         echo $e->getmessage();
     }
 };
+
+// el siguiente condicional y la siguiente funcion es para añadir productos al carrito
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['anadir'])) {
+    session_start();
+    $iduser = $_SESSION['id'];
+    $idprod = $_POST["nombreprod"];
+    $cantidad = 1;
+    anadirCarrito($conexdb, $iduser, $idprod, $cantidad);
+}
+
+
+function anadirCarrito($conexion, $iduser, $idprod, $cantidad)
+{
+    try {
+        $stm = $conexion->prepare("INSERT INTO carrito(idusuarios, nombre_prod, cantidad) VALUES (:iduser, :idprod, :cantidad)");
+        $stm->bindParam(":iduser", $iduser, PDO::PARAM_INT);
+        $stm->bindParam(":idprod", $idprod, PDO::PARAM_STR, 255);
+        $stm->bindParam(":cantidad", $cantidad, PDO::PARAM_INT);
+        $stm->execute();
+        header("Location: index.php?registro=true");
+    } catch (PDOException $e) {
+        echo $e->getmessage();
+    }
+}
+
+function mostrarCarrito($conexdb)
+{
+    try {
+        $query = "SELECT nombre_prod, cantidad FROM carrito";
+        $stm = $conexdb->prepare($query);
+        $stm->execute();
+        $productos = $stm->fetchAll(PDO::FETCH_ASSOC);
+        return $productos;
+    } catch (PDOException $e) {
+        echo $e->getmessage();
+    }
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['borrarCarrito'])) {
+    $nombreProd = $_POST["nombreProd"];
+    borrarCarrito($conexdb, $nombreProd);
+}
+
+function borrarCarrito($conexdb, $nombreProd)
+{
+    try {
+        $query = "DELETE FROM carrito WHERE nombre_prod = :nombreProd";
+        $stm = $conexdb->prepare($query);
+        $stm->bindParam(":nombreProd", $nombreProd, PDO::PARAM_STR, 255);
+        $stm->execute();
+        header("Location: carrito.php?borrado=true");
+    } catch (PDOException $e) {
+        header("Location: index.php?error=true");
+    }
+}

@@ -57,6 +57,7 @@ if (isset($_GET['registro']) && $_GET['registro'] === 'true') {
             <?php
             session_start();
             if (isset($_SESSION['usuario'])) {
+                echo $_SESSION['id'];
                 echo '
                         <h4>Hola, ' . ($_SESSION['usuario']) . '</h4>
                         <button class="btn-registro" name="ir_carrito">Carrito</button>
@@ -67,6 +68,7 @@ if (isset($_GET['registro']) && $_GET['registro'] === 'true') {
                         <button class="btn-login" name="ir_login">Login</button>
                         ';
             }
+
             ?>
         </div>
     </form>
@@ -97,10 +99,12 @@ if (isset($_GET['registro']) && $_GET['registro'] === 'true') {
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="#000000" d="M10 0v4H8l4 4l4-4h-2V0M1 2v2h2l3.6 7.6L5.2 14c-.1.3-.2.6-.2 1c0 1.1.9 2 2 2h12v-2H7.4c-.1 0-.2-.1-.2-.2v-.1l.9-1.7h7.4c.7 0 1.4-.4 1.7-1l3.9-7l-1.7-1l-3.9 7h-7L4.3 2M7 18c-1.1 0-2 .9-2 2s.9 2 2 2s2-.9 2-2s-.9-2-2-2m10 0c-1.1 0-2 .9-2 2s.9 2 2 2s2-.9 2-2s-.9-2-2-2"/></svg>
                             </button>' : '') . '
                             <input type="hidden" name="idprod" value="' . $producto["idproductos"] . '"> 
+                            <input type="hidden" name="nombreprod" value="' . $producto["nombre_prod"] . '">
                         </form>
                     </td>
                 </tr>';
         }
+
         ?>
 
     </table>
