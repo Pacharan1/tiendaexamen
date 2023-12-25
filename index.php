@@ -10,6 +10,7 @@
 
 
 <?php
+//aqui establecemos un condicional para que en funcion de si pulsamos el modo oscuro o el claro nos modifique la clase del body
 include("conexion.php");
 if (isset($_COOKIE['modoOscuro']) && $_COOKIE['modoOscuro'] == 'true') {
     echo '<body class="modo-oscuro">';
@@ -18,7 +19,7 @@ if (isset($_COOKIE['modoOscuro']) && $_COOKIE['modoOscuro'] == 'true') {
 }
 
 ?>
-
+<!-- botones modo oscuro y claro -->
 <form action="" method="post">
     <button name="modoOscuro"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 14 14">
             <path fill="#000000" fill-rule="evenodd" d="M0 7a7 7 0 1 1 14 0A7 7 0 0 1 0 7m7-.019a2.46 2.46 0 0 1 2.46-2.459c.25 0 .441-.3.258-.47a3.996 3.996 0 1 0 0 5.86c.183-.17-.008-.471-.258-.471A2.46 2.46 0 0 1 7 6.98Z" clip-rule="evenodd" />
@@ -46,6 +47,9 @@ if (isset($_GET['modificado']) && $_GET['modificado'] === 'true') {
 if (isset($_GET['registro']) && $_GET['registro'] === 'true') {
     echo "<p class='check'>Registro realizado correctamente</p>";
 }
+if (isset($_GET['logeate']) && $_GET['logeate'] === 'true') {
+    echo "<p class='error'>Primero tienes que iniciar sesion</p>";
+}
 ?>
 
 
@@ -55,9 +59,10 @@ if (isset($_GET['registro']) && $_GET['registro'] === 'true') {
         <button class="btn-crear" name="ir_crear">Crear</button>
         <div class="acceso">
             <?php
+            //***aqui creo un condicional que me muestre diferentes botones en funcion de si esta iniciada la sesion o no***
             session_start();
+            echo $_SESSION['id'];
             if (isset($_SESSION['usuario'])) {
-                echo $_SESSION['id'];
                 echo '
                         <h4>Hola, ' . ($_SESSION['usuario']) . '</h4>
                         <button class="btn-registro" name="ir_carrito">Carrito</button>

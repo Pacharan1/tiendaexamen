@@ -12,7 +12,8 @@
     include("conexion.php");
 
     ?>
-    <!-- RECUERDA METER EL ACTION CON LA PAGINA A DONDE QUIERES IR CON EL USUARIO -->
+    <!-- pagina de LOGIN. hacemos validacion de datos con el tipo email(que no acepte otro tipo de dato). 
+    La contraseña se esconde para que no se vean los datos en la pantalla -->
     <form action="" method="post">
         <p>Correo electronico</p>
         <input type="email" name="email" required><br>

@@ -14,7 +14,7 @@
     if (isset($_GET['id'])) {
         $idprod = $_GET['id'];
     }
-
+    //esta es la pagina de modificacion de productos, hemos recibido el id del producto por GET y lo usamos para modificar la base de datos
     ?>
     <form action="" method="post">
         <label for="">Nuevo nombre</label>
