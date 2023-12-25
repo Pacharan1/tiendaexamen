@@ -229,13 +229,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['anadir'])) {
     $iduser = $_SESSION['id'];
     $idprod = $_POST["nombreprod"];
     try {
-        $stm = $conexdb->prepare("SELECT idusuarios, cantidad FROM carrito WHERE nombre_prod = :idprod");
+        $stm = $conexdb->prepare("SELECT cantidad FROM carrito WHERE nombre_prod = :idprod AND idusuarios = :iduser");
         $stm->bindParam(":idprod", $idprod, PDO::PARAM_STR, 255);
+        $stm->bindParam(":iduser", $iduser, PDO::PARAM_INT);
         $stm->execute();
         $resultado = $stm->fetch(PDO::FETCH_ASSOC);
-        if ($resultado['idusuarios'] == $_SESSION['id'] && $resultado['nombre_prod'] == $_POST["nombreprod"]) {
+        if ($resultado) {
             $cantidad = $resultado['cantidad'] + 1;
-            actualizarCarrito($conexdb, $idprod, $cantidad);
+            actualizarCarrito($conexdb, $idprod, $iduser, $cantidad);
         } else {
             $cantidad = 1;
             anadirCarrito($conexdb, $iduser, $idprod, $cantidad);
@@ -301,15 +302,15 @@ function borrarCarrito($conexdb, $nombreProd, $iduser)
 //----------------------------------------------------------------------------------
 
 //el siguiente condicional y la siguiente funcion es para MODIFICAR LA CANTIDAD DE PRODUCTOS DEL CARRITO si existe el producto en el carrito
-function actualizarCarrito($conexdb, $nombreProd, $cantidad)
+function actualizarCarrito($conexdb, $nombreProd, $iduser, $cantidad)
 {
     try {
-        $query = "UPDATE carrito SET cantidad = :cantidad WHERE nombre_prod = :nombreProd;";
+        $query = "UPDATE carrito SET cantidad = :cantidad WHERE nombre_prod = :nombreProd AND idusuarios = :iduser";
         $stm = $conexdb->prepare($query);
         $stm->bindParam(":cantidad", $cantidad, PDO::PARAM_INT);
+        $stm->bindParam(":iduser", $iduser, PDO::PARAM_INT);
         $stm->bindParam(":nombreProd", $nombreProd, PDO::PARAM_STR, 255);
         $stm->execute();
-        header("Location: carrito.php?modificado=true");
     } catch (PDOException $e) {
         header("Location: index.php?error=true");
     }

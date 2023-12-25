@@ -61,7 +61,6 @@ if (isset($_GET['logeate']) && $_GET['logeate'] === 'true') {
             <?php
             //***aqui creo un condicional que me muestre diferentes botones en funcion de si esta iniciada la sesion o no***
             session_start();
-            echo $_SESSION['id'];
             if (isset($_SESSION['usuario'])) {
                 echo '
                         <h4>Hola, ' . ($_SESSION['usuario']) . '</h4>
