@@ -104,6 +104,7 @@ if (isset($_GET['logeate']) && $_GET['logeate'] === 'true') {
                             </button>' : '') . '
                             <input type="hidden" name="idprod" value="' . $producto["idproductos"] . '"> 
                             <input type="hidden" name="nombreprod" value="' . $producto["nombre_prod"] . '">
+                            <input type="hidden" name="precioprod" value="' . $producto["precio_prod"] . '">
                         </form>
                     </td>
                 </tr>';

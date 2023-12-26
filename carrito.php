@@ -38,7 +38,9 @@ if (!$_SESSION['usuario']) {
 <table>
     <tr class="encabezado">
         <td>Nombre del Producto</td>
+        <td>Precio</td>
         <td>Cantidad</td>
+        <td>Total</td>
         <td></td>
     </tr>
     <?php
@@ -49,11 +51,15 @@ if (!$_SESSION['usuario']) {
     }
     $usuario = $_SESSION['id'];
     $carrito = mostrarCarrito($conexdb, $usuario);
+    $totalCarrito = 0;
     foreach ($carrito as $producto) {
+        $totalCarrito += $producto["total"]; //esto es para calcular el total del carrito
         echo
         '<tr>
                     <td>' . $producto["nombre_prod"] . '</td>
+                    <td>' . $producto["precio_prod"] . ' €</td>
                     <td>' . $producto["cantidad"] . '</td>
+                    <td>' . $producto["total"] . ' €</td>
                     <td>
                         <form action="" method="post">
                             <button class="btn-borrar" name="borrarCarrito">Borrar</button>
@@ -65,6 +71,7 @@ if (!$_SESSION['usuario']) {
     ?>
 
 </table>
+<h3>Total: <?php echo $totalCarrito ?> €</h3>
 <form action="index.php" method="post">
     <button name="volver">Volver al inicio</button>
     </body>

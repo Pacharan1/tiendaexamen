@@ -143,3 +143,10 @@ input:checked + .slider:before {
 h1 {
   text-align: center;
 }
+
+h3 {
+  position: absolute;
+  right: 200px;
+  width: auto;
+  text-align: right;
+}

@@ -228,6 +228,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['anadir'])) {
     session_start();
     $iduser = $_SESSION['id'];
     $idprod = $_POST["nombreprod"];
+    $precio = $_POST["precioprod"];
     try {
         $stm = $conexdb->prepare("SELECT cantidad FROM carrito WHERE nombre_prod = :idprod AND idusuarios = :iduser");
         $stm->bindParam(":idprod", $idprod, PDO::PARAM_STR, 255);
@@ -237,9 +238,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['anadir'])) {
         if ($resultado) {
             $cantidad = $resultado['cantidad'] + 1;
             actualizarCarrito($conexdb, $idprod, $iduser, $cantidad);
+            total($conexdb);
         } else {
             $cantidad = 1;
-            anadirCarrito($conexdb, $iduser, $idprod, $cantidad);
+            anadirCarrito($conexdb, $iduser, $idprod, $precio, $cantidad);
+            total($conexdb);
         }
         header("Location: index.php?registro=true");
     } catch (PDOException $e) {
@@ -247,12 +250,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['anadir'])) {
     }
 }
 
-function anadirCarrito($conexion, $iduser, $idprod, $cantidad)
+/*esta funcion es meter una sentencia de actualizacion en la BBDD 
+y que multiplique el precio por la cantidad para actualizar el campo de "total"*/
+function total($conexion)
 {
     try {
-        $stm = $conexion->prepare("INSERT INTO carrito(idusuarios, nombre_prod, cantidad) VALUES (:iduser, :idprod, :cantidad)");
+        $query = "UPDATE carrito SET total = precio_prod * cantidad;";
+        $stm = $conexion->prepare($query);
+        $stm->execute();
+    } catch (PDOException $e) {
+        echo $e->getmessage();
+    }
+}
+
+function anadirCarrito($conexion, $iduser, $idprod, $precio, $cantidad)
+{
+    try {
+        $stm = $conexion->prepare("INSERT INTO carrito(idusuarios, nombre_prod, precio_prod, cantidad) VALUES (:iduser, :idprod, :precio, :cantidad)");
         $stm->bindParam(":iduser", $iduser, PDO::PARAM_INT);
         $stm->bindParam(":idprod", $idprod, PDO::PARAM_STR, 255);
+        $stm->bindParam(":precio", $precio, PDO::PARAM_INT);
         $stm->bindParam(":cantidad", $cantidad, PDO::PARAM_INT);
         $stm->execute();
         header("Location: index.php?registro=true");
@@ -264,7 +281,7 @@ function anadirCarrito($conexion, $iduser, $idprod, $cantidad)
 function mostrarCarrito($conexdb, $iduser)
 {
     try {
-        $query = "SELECT nombre_prod, cantidad FROM carrito WHERE idusuarios = :iduser";
+        $query = "SELECT nombre_prod, precio_prod, cantidad, total FROM carrito WHERE idusuarios = :iduser";
         $stm = $conexdb->prepare($query);
         $stm->bindParam(":iduser", $iduser, PDO::PARAM_INT);
         $stm->execute();
