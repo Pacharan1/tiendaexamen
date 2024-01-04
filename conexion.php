@@ -82,6 +82,23 @@ function mostrarProductos($conexdb)
 
 //----------------------------------------------------------------------------------
 
+//***La siguiente funcion es para mostrar los productos en la pagina principal***
+function mostrarProductosBuscados($conexdb, $busqueda)
+{
+    try {
+        $query = "SELECT * FROM productos WHERE nombre_prod = :busqueda";
+        $stm = $conexdb->prepare($query);
+        $stm->bindParam(":busqueda", $busqueda, PDO::PARAM_STR, 255);
+        $stm->execute();
+        $productos = $stm->fetchAll(PDO::FETCH_ASSOC);
+        return $productos;
+    } catch (PDOException $e) {
+        echo $e->getmessage();
+    }
+}
+
+//----------------------------------------------------------------------------------
+
 //***El siguiente condicional y funcion es para CREAR un producto.***
 //Dentro del condicional se evalua el precio que sea un numero y que no está vacio
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['crear'])) {

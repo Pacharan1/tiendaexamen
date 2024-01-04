@@ -63,11 +63,19 @@ if (isset($_GET['logeate']) && $_GET['logeate'] === 'true') {
             session_start();
             if (isset($_SESSION['usuario'])) {
                 echo '
+                        <form action="" method="post">
+                        <input type="text" name="buscar">
+                        <input type="submit" value="Buscar">
+                        </form>
                         <h4>Hola, ' . ($_SESSION['usuario']) . '</h4>
                         <button class="btn-registro" name="ir_carrito">Carrito</button>
                         <button class="btn-login" name="logout">Logout</button>';
             } else {
                 echo '
+                        <form action="" method="post">
+                        <input type="text" name="buscar">
+                        <input type="submit" value="Buscar">
+                        </form>
                         <button class="btn-registro" name="ir_registro">Registro</button>
                         <button class="btn-login" name="ir_login">Login</button>
                         ';
@@ -88,10 +96,13 @@ if (isset($_GET['logeate']) && $_GET['logeate'] === 'true') {
         /*para mostrar los productos he creado una sentencia preparada en el archivo conexion.php el cual hace un fetchAll 
             de todos los registros de la base de datos de los productos y en el index llamamos a la funcion y con un foreach vamos 
             imprimiendo producto por producto */
-        $productos = mostrarProductos($conexdb);
-        foreach ($productos as $producto) {
-            echo
-            '<tr>
+
+        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['buscar'])) {
+            $busqueda = $_POST['buscar'];
+            $productos = mostrarProductosBuscados($conexdb, $busqueda);
+            foreach ($productos as $producto) {
+                echo
+                '<tr>
                     <td>' . $producto["idproductos"] . '</td>
                     <td>' . $producto["nombre_prod"] . '</td>
                     <td>' . $producto["precio_prod"] . ' €</td>
@@ -108,12 +119,61 @@ if (isset($_GET['logeate']) && $_GET['logeate'] === 'true') {
                         </form>
                     </td>
                 </tr>';
+            }
+        } else if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['borrar_filtro'])) {
+            $productos = mostrarProductos($conexdb);
+            foreach ($productos as $producto) {
+                echo
+                '<tr>
+                    <td>' . $producto["idproductos"] . '</td>
+                    <td>' . $producto["nombre_prod"] . '</td>
+                    <td>' . $producto["precio_prod"] . ' €</td>
+                    <td>
+                        <form action="" method="post">
+                            <a class="btn-modificar" href=modificar.php?id=' . $producto["idproductos"] . '>Modificar</a>
+                            <button class="btn-borrar" name="borrar">Borrar</button>
+                            ' . (isset($_SESSION['usuario']) ? '<button class="btn-anadir" name="anadir">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="#000000" d="M10 0v4H8l4 4l4-4h-2V0M1 2v2h2l3.6 7.6L5.2 14c-.1.3-.2.6-.2 1c0 1.1.9 2 2 2h12v-2H7.4c-.1 0-.2-.1-.2-.2v-.1l.9-1.7h7.4c.7 0 1.4-.4 1.7-1l3.9-7l-1.7-1l-3.9 7h-7L4.3 2M7 18c-1.1 0-2 .9-2 2s.9 2 2 2s2-.9 2-2s-.9-2-2-2m10 0c-1.1 0-2 .9-2 2s.9 2 2 2s2-.9 2-2s-.9-2-2-2"/></svg>
+                            </button>' : '') . '
+                            <input type="hidden" name="idprod" value="' . $producto["idproductos"] . '"> 
+                            <input type="hidden" name="nombreprod" value="' . $producto["nombre_prod"] . '">
+                            <input type="hidden" name="precioprod" value="' . $producto["precio_prod"] . '">
+                        </form>
+                    </td>
+                </tr>';
+            }
+        } else {
+            $productos = mostrarProductos($conexdb);
+            foreach ($productos as $producto) {
+                echo
+                '<tr>
+                    <td>' . $producto["idproductos"] . '</td>
+                    <td>' . $producto["nombre_prod"] . '</td>
+                    <td>' . $producto["precio_prod"] . ' €</td>
+                    <td>
+                        <form action="" method="post">
+                            <a class="btn-modificar" href=modificar.php?id=' . $producto["idproductos"] . '>Modificar</a>
+                            <button class="btn-borrar" name="borrar">Borrar</button>
+                            ' . (isset($_SESSION['usuario']) ? '<button class="btn-anadir" name="anadir">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="#000000" d="M10 0v4H8l4 4l4-4h-2V0M1 2v2h2l3.6 7.6L5.2 14c-.1.3-.2.6-.2 1c0 1.1.9 2 2 2h12v-2H7.4c-.1 0-.2-.1-.2-.2v-.1l.9-1.7h7.4c.7 0 1.4-.4 1.7-1l3.9-7l-1.7-1l-3.9 7h-7L4.3 2M7 18c-1.1 0-2 .9-2 2s.9 2 2 2s2-.9 2-2s-.9-2-2-2m10 0c-1.1 0-2 .9-2 2s.9 2 2 2s2-.9 2-2s-.9-2-2-2"/></svg>
+                            </button>' : '') . '
+                            <input type="hidden" name="idprod" value="' . $producto["idproductos"] . '"> 
+                            <input type="hidden" name="nombreprod" value="' . $producto["nombre_prod"] . '">
+                            <input type="hidden" name="precioprod" value="' . $producto["precio_prod"] . '">
+                        </form>
+                    </td>
+                </tr>';
+            }
         }
+
 
         ?>
 
     </table>
 </div>
+<form action="" method="post">
+    <button name="borrar_filtro">Reset</button>
+</form>
 </div>
 </body>
 
