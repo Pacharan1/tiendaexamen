@@ -98,11 +98,17 @@ if (isset($_GET['logeate']) && $_GET['logeate'] === 'true') {
             imprimiendo producto por producto */
 
         if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['buscar'])) {
-            $busqueda = $_POST['buscar'];
-            $productos = mostrarProductosBuscados($conexdb, $busqueda);
-            foreach ($productos as $producto) {
-                echo
-                '<tr>
+            if (empty($_POST['buscar'])) {
+                echo "No has introducido ningun producto";
+            } else {
+                $busqueda = $_POST['buscar'];
+                $productos = mostrarProductosBuscados($conexdb, $busqueda);
+                if (empty($productos)) {
+                    echo "No se ha encontrado ningun producto";
+                } else {
+                    foreach ($productos as $producto) {
+                        echo
+                        '<tr>
                     <td>' . $producto["idproductos"] . '</td>
                     <td>' . $producto["nombre_prod"] . '</td>
                     <td>' . $producto["precio_prod"] . ' €</td>
@@ -119,6 +125,8 @@ if (isset($_GET['logeate']) && $_GET['logeate'] === 'true') {
                         </form>
                     </td>
                 </tr>';
+                    }
+                }
             }
         } else if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['borrar_filtro'])) {
             $productos = mostrarProductos($conexdb);
